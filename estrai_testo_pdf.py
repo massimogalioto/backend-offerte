@@ -10,8 +10,8 @@ router = APIRouter()
 
 @router.post("/estrai-testo-pdf", summary="Estrai testo da un PDF con OCR", tags=["Utility"])  #modificato (2025-06-03)
 async def estrai_testo_pdf(file: UploadFile = File(...)):
-    if not file.filename.endswith(".pdf"):
-        raise HTTPException(status_code=400, detail="Il file deve essere un PDF")
+    #if not file.filename.endswith(".pdf"):
+    #   raise HTTPException(status_code=400, detail="Il file deve essere un PDF")
 
     try:
         with NamedTemporaryFile(delete=False, suffix=".pdf") as temp:
