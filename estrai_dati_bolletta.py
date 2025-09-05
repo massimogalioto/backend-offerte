@@ -21,7 +21,7 @@ def estrai_dati_bolletta(testo: str) -> dict:
             "- tipo_fornitura ('Luce' o 'Gas')\n"
             "- tipologia_cliente  (restituisci esclusivamente Residenziale se non è Altri Usi, Business se è altri usi)\n"
             "se trovi più corrispondenze per lo stesso dato restituisci il primo che trovi, Rispondi solo con JSON valido, senza commenti, testo extra o simboli come ```json. Ecco il testo da analizzare:\n\n"
-            f"{testo[:7000]}" # AGGIUNGI - quota_fissa_vendita_energia (cerca nella sezione Quora fissa il corrispondente importo dopo la dicitura 'di cui spesa per vendita energia elettrica' deve essere una quota euro al mese)\n 
+            f"{testo[:7000]}" # AGGIUNGI - quota_fissa_vendita_energia (cerca nella sezione Quora fissa il corrispondente importo dopo la dicitura 'di cui spesa per vendita energia elettrica' deve essere una quota euro al mese solo il valore numerico con punto decimale)\n 
         )
 
         response = client.chat.completions.create(
