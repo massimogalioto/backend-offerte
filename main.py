@@ -37,7 +37,7 @@ class BollettaInput(BaseModel):
     kwh_totali: float
     mesi_bolletta: int
     spesa_materia_energia: float
-    quota_fissa_vendita: float #modifica 05-09-2025
+    #quota_fissa_vendita: float #modifica 05-09-2025
     tipo_fornitura: str  # "Luce" o "Gas"
     tipologia_cliente: str  # "Residenziale" o "Business"
     data_riferimento: str  # formato "YYYY-MM-DD"
@@ -53,7 +53,7 @@ def confronta_bolletta(bolletta: BollettaInput, x_api_key: str = Header(None)):
         raise HTTPException(status_code=401, detail="Chiave API non valida")
 
     try:
-        risultato = confronta_offerte(bolletta.dict()) #modifica 05-09-2025
+        risultato = confronta_offerte(bolletta) #modifica 05-09-2025
         return {"offerte": risultato}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
