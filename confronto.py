@@ -12,7 +12,7 @@ def confronta_offerte(bolletta):
     
     kwh_mensili = kwh_totali / mesi_bolletta
     spesa_mensile = spesa_materia_energia / mesi_bolletta
-    prezzo_effettivo = spesa_mensile / kwh_mensili
+    prezzo_effettivo = (spesa_mensile / kwh_mensili) + quota_fissa
 
     offerte = get_offerte(tipo_fornitura, tipologia_cliente)
     prezzo_mercato = get_prezzo_mercato(tipo_fornitura, data)
