@@ -13,7 +13,16 @@ TBL_MERCATO = os.getenv("AIRTABLE_MERCATO_TABLE")
 
 def get_offerte(tipo_fornitura, tipologia_cliente):
     table = Table(API_KEY, BASE_ID, TBL_OFFERTE)
-    formula = f"AND({{Tipo fornitura}} = '{tipo_fornitura}', {{Tipologia cliente}} = '{tipologia_cliente}')"
+    oggi = datetime.today()
+    mese_corrente = oggi.strftime("%Y-%m")  # esempio: '2025-09'
+
+    formula = f"""AND(
+        {{Tipo fornitura}} = '{tipo_fornitura}',
+        {{Tipologia cliente}} = '{tipologia_cliente}',
+        DATETIME_FORMAT({{Data validità}}, 'YYYY-MM') = '{mese_corrente}'
+    )"""
+    
+    #formula = f"AND({{Tipo fornitura}} = '{tipo_fornitura}', {{Tipologia cliente}} = '{tipologia_cliente}')"
     return table.all(formula=formula)
 
 def get_prezzo_mercato(tipo_fornitura, data_str):
