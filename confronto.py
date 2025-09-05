@@ -8,7 +8,7 @@ def confronta_offerte(bolletta):
     tipo_fornitura = bolletta["tipo_fornitura"]
     tipologia_cliente = bolletta["tipologia_cliente"]
     data = bolletta["data_riferimento"]
-    #quota_fissa = bolletta["quota_fissa_vendita"]
+    quota_fissa = bolletta["quota_fissa_vendita"] #modifica 05-09-2025
     
     kwh_mensili = kwh_totali / mesi_bolletta
     spesa_mensile = spesa_materia_energia / mesi_bolletta
