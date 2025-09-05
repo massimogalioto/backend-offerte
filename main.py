@@ -53,7 +53,7 @@ def confronta_bolletta(bolletta: BollettaInput, x_api_key: str = Header(None)):
         raise HTTPException(status_code=401, detail="Chiave API non valida")
 
     try:
-        risultato = confronta_offerte(bolletta) #modifica 05-09-2025
+        risultato = confronta_offerte(bolletta.dict()) #modifica 05-09-2025
         return {"offerte": risultato}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
