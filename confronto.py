@@ -19,7 +19,11 @@ def confronta_offerte(bolletta):
     #prezzo_mercato = get_prezzo_mercato(tipo_fornitura, data)
     dati_mercato = get_prezzo_mercato(tipo_fornitura, data)
 
-    prezzo_mercato = dati_mercato["Prezzo medio €/kWh"] + dati_mercato["Disp"]
+    prezzo = dati_mercato["prezzo_medio"]
+    disp = dati_mercato["disp"]
+
+    # Esempio somma
+    prezzo_mercato = prezzo + disp
     
 
     
