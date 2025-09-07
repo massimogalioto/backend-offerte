@@ -18,13 +18,9 @@ def confronta_offerte(bolletta):
     offerte = get_offerte(tipo_fornitura, tipologia_cliente)
     #prezzo_mercato = get_prezzo_mercato(tipo_fornitura, data)
     dati_mercato = get_prezzo_mercato(tipo_fornitura, data)
-
-    prezzo = dati_mercato["prezzo_medio"]
+    #ricavo sia prezzo del PUN/PSV che spesa per dispacciamento ccr ecc ecc
+    prezzo_mercato = dati_mercato["prezzo_medio"]
     disp = dati_mercato["disp"]
-
-    # Esempio somma
-    prezzo_mercato = prezzo + disp
-    
 
     
     confronti = []
