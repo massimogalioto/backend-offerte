@@ -33,8 +33,15 @@ def get_prezzo_mercato(tipo_fornitura, data_str):
     if not records:
         raise Exception(f"Nessun prezzo trovato per {tipo_fornitura} nel mese {data_str}")
 
-    return float(records[0]["fields"].get("Prezzo medio €/kWh", 0))
+    fields = records[0]["fields"]
 
+    prezzo_medio = float(fields.get("Prezzo medio €/kWh", 0))
+    disponibilita = float(fields.get("Disp", 0))
+
+    return {
+        "prezzo_medio": prezzo_medio,
+        "disp": disponibilita
+    }
 def salva_offerta(dati: dict) -> dict:
     try:
         table = Table(API_KEY, BASE_ID, TBL_OFFERTE)
