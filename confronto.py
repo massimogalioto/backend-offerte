@@ -36,14 +36,14 @@ def confronta_offerte(bolletta):
         id_offerta = fields.get("id_offerta")
 
         if tipo_tariffa == "Fisso":
-            prezzo_kwh = fields.get("Prezzo fisso €/kWh", 0) + disp
+            prezzo_kwh = fields.get("Prezzo fisso €/kWh", 0) 
         elif tipo_tariffa == "Variabile":
             spread = fields.get("Spread €/kWh", 0)
             prezzo_kwh = prezzo_mercato + spread
         else:
             continue
 
-        costo_stimato = round((prezzo_kwh * kwh_mensili) + costo_fisso, 2)
+        costo_stimato = round(((prezzo_kwh + disp) * kwh_mensili) + costo_fisso, 2)
         delta = costo_stimato - spesa_mensile
 
         if delta < 0:
