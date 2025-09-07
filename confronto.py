@@ -16,8 +16,13 @@ def confronta_offerte(bolletta):
     prezzo_effettivo = spesa_mensile / kwh_mensili
 
     offerte = get_offerte(tipo_fornitura, tipologia_cliente)
-    prezzo_mercato = get_prezzo_mercato(tipo_fornitura, data)
+    #prezzo_mercato = get_prezzo_mercato(tipo_fornitura, data)
+    dati_mercato = get_prezzo_mercato(tipo_fornitura, data)
 
+    prezzo_mercato = dati_mercato["Prezzo medio €/kWh"] + dati_mercato["Disp"]
+    
+
+    
     confronti = []
 
     for offerta in offerte:
