@@ -54,7 +54,6 @@ def confronta_offerte(bolletta):
             "fornitore": fields.get("Fornitore"),  # visibile solo nel backend
             "nome_offerta": fields.get("Nome offerta"),
             "tariffa": tipo_tariffa,
-            "Dispacciamento":disp,
             "prezzo_kwh": round(prezzo_kwh, 4),
             "costo_fisso": costo_fisso,
             "totale_simulato": costo_stimato,
