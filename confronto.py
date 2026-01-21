@@ -12,7 +12,7 @@ def confronta_offerte(bolletta):
    
     
     kwh_mensili = kwh_totali / mesi_bolletta
-    spesa_mensile = (spesa_materia_energia / mesi_bolletta) + quota_fissa #modifica 06-09-2025
+    spesa_mensile = (spesa_materia_energia / mesi_bolletta) + (quota_fissa/mesi_bolletta) #modifica 06-09-2025
     prezzo_effettivo = spesa_mensile / kwh_mensili
 
     offerte = get_offerte(tipo_fornitura, tipologia_cliente)
@@ -54,6 +54,7 @@ def confronta_offerte(bolletta):
             "fornitore": fields.get("Fornitore"),  # visibile solo nel backend
             "nome_offerta": fields.get("Nome offerta"),
             "tariffa": tipo_tariffa,
+            "Dispacciamento":disp,
             "prezzo_kwh": round(prezzo_kwh, 4),
             "costo_fisso": costo_fisso,
             "totale_simulato": costo_stimato,
