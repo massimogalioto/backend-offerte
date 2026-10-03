@@ -1,0 +1,7 @@
+.git
+.tools
+frontend
+tests
+__pycache__
+*.pyc
+.env

@@ -1,0 +1,6 @@
+.tools/
+reference.html
+reference.css
+__pycache__/
+*.pyc
+.env

@@ -1,0 +1,62 @@
+import { connectionRequest } from "./lib/connection";
+export const MAX_CONCURRENT = 2;
+export type Status = "IN ATTESA" | "ELABORAZIONE" | "SALVATAGGIO" | "COMPLETATA" | "ERRORE";
+export type Result = {
+  filename: string; success: boolean; output_ai: Record<string, unknown> | null;
+  airtable_id: string | null; error: string | null;
+};
+export type Item = Result & { file: File; status: Status; id: number };
+
+export function selectPdfs(files: File[]): Item[] {
+  return files.filter(file => /\.pdf$/i.test(file.name)).map((file, id) => ({
+    file, id, filename: file.name, status: "IN ATTESA", success: false,
+    output_ai: null, airtable_id: null, error: null,
+  }));
+}
+
+async function request(url: string, init: RequestInit) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 300_000);
+  try {
+    const response = await fetch(...connectionRequest(url, { ...init, signal: controller.signal }));
+    let data;
+    try { data = await response.json(); } catch { throw new Error(`Risposta del servizio non leggibile (HTTP ${response.status})`); }
+    if (!response.ok) throw new Error(typeof data.detail === "string" ? data.detail : `Errore HTTP ${response.status}: ${JSON.stringify(data.detail)}`);
+    return data;
+  } catch (error) {
+    if (controller.signal.aborted) throw new Error("Timeout: verificare Airtable prima di riprovare un salvataggio.");
+    throw error;
+  } finally { clearTimeout(timer); }
+}
+
+// Only MAX_CONCURRENT workers are started, each handling extraction AND saving.
+export async function runBatch(items: Item[], baseUrl: string, update: (id: number, patch: Partial<Item>) => void) {
+  let next = 0;
+  async function worker() {
+    while (next < items.length) {
+      const item = items[next++];
+      let output = item.output_ai;
+      update(item.id, { status: "ELABORAZIONE", error: null });
+      try {
+        // Preserve successful extraction when retrying a failed save.
+        if (!output) {
+          if (!item.file.size || item.file.size > 25 * 1024 * 1024) throw new Error("Il PDF deve avere una dimensione compresa tra 1 byte e 25 MB");
+          const form = new FormData(); form.append("file", item.file);
+          const extracted = await request(`${baseUrl}/upload-cte`, { method: "POST", body: form });
+          if (!extracted.output_ai || typeof extracted.output_ai !== "object" || Array.isArray(extracted.output_ai)) throw new Error("Risposta AI non valida");
+          if (extracted.output_ai.errore) throw new Error(extracted.output_ai.errore);
+          output = { ...extracted.output_ai, fonte_cte: item.filename };
+        }
+        update(item.id, { status: "SALVATAGGIO", output_ai: output });
+        const saved = await request(`${baseUrl}/salva-offerta`, {
+          method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(output),
+        });
+        if (!saved.successo || !saved.id) throw new Error("Salvataggio Airtable non confermato");
+        update(item.id, { status: "COMPLETATA", success: true, output_ai: output, airtable_id: saved.id, error: null });
+      } catch (error) {
+        update(item.id, { status: "ERRORE", success: false, output_ai: output, airtable_id: null, error: error instanceof Error ? error.message : "Errore inatteso" });
+      }
+    }
+  }
+  await Promise.all(Array.from({ length: Math.min(MAX_CONCURRENT, items.length) }, worker));
+}

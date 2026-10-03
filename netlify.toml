@@ -1,0 +1,8 @@
+[build]
+  base = "frontend"
+  command = "npm run build:static"
+  publish = "netlify-upload"
+
+[build.environment]
+  NODE_VERSION = "22"
+  NETLIFY_NEXT_PLUGIN_SKIP = "true"

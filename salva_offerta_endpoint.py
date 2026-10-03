@@ -1,6 +1,9 @@
 from fastapi import APIRouter, HTTPException, Header
 from pydantic import BaseModel
 from airtable_service import salva_offerta
+import logging
+
+logger = logging.getLogger("uvicorn.error")
 
 router = APIRouter()
 
@@ -25,7 +28,9 @@ def salva(offerta: OffertaInput, x_api_key: str = Header(None)):
 
     risultato = salva_offerta(offerta.dict())
     if "errore" in risultato:
+        logger.error("[CTE] ERRORE: %s - salvataggio Airtable fallito", offerta.fonte_cte)
         raise HTTPException(status_code=500, detail=risultato["errore"])
 
+    logger.info("[CTE] Airtable salvato: %s - %s", offerta.fonte_cte, risultato.get("id"))
     return {"successo": True, "id": risultato.get("id")}
 

@@ -1,0 +1,9 @@
+node_modules/
+.next/
+.env*
+!.env.example
+playwright-report/
+test-results/
+*.tsbuildinfo
+.static-build/
+netlify-upload/
