@@ -1,4 +1,4 @@
-from airtable_service import get_offerte, get_prezzo_mercato
+from airtable_service import get_offerte, get_prezzo_mercato, estrai_cte_attachment
 from datetime import datetime
 
 def confronta_offerte(bolletta):
@@ -60,7 +60,8 @@ def confronta_offerte(bolletta):
             "prezzo_effettivo_pagato": round(prezzo_effettivo, 4),
             "differenza_mensile": round(delta, 2),
             "tipo_differenza": tipo_diff,
-            "percentuale": round(percentuale, 2)
+            "percentuale": round(percentuale, 2),
+            "cte": estrai_cte_attachment(fields)
         })
 
     confronti.sort(key=lambda x: x["totale_simulato"])
